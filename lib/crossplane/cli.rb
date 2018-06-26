@@ -1,0 +1,119 @@
+#require 'crossplane/config'
+#require 'crossplane/parser'
+require 'json'
+require 'logger'
+require 'pp'
+require 'thor'
+require 'yaml'
+
+require_relative 'builder.rb'
+require_relative 'config.rb'
+require_relative 'parser.rb'
+
+$script = File.basename($0)
+$config = CrossPlane::Config.new()
+#$logger = $utils.configure_logger()
+
+trap('SIGINT') {
+	puts("\nControl-C received.")
+	exit(0)
+}
+
+def configure_options(thor, opt_type, opts)
+	opts = opts.sort_by { |k| k[:name].to_s }
+	opts.each do |opt|
+		required = opt.has_key?(:required) ? opt[:required] : false
+		if opt_type == "class"
+			thor.class_option(opt[:name], :banner => opt[:banner], :desc => opt[:desc], :required => required, :type => opt[:type])
+		elsif opt_type == "method"
+			thor.method_option(opt[:name], :banner => opt[:banner], :desc => opt[:desc], :required => required, :type => opt[:type])
+		end
+	end
+end
+
+class CLI < Thor
+	desc 'parse', 'parses a json payload for an nginx config'
+	configure_options(self, 'method', $config.parse_options)
+	def parse(filename)
+		payload = CrossPlane::Parser.new(
+			filename: filename,
+			combine: options['combine'] || false,
+			strict: options['strict'] || false,
+			catch_errors: options['no_catch'] ? false : true,
+			comments: options['comments'] || true,
+			ignore: options['ignore'] || [],
+			single: options['single'] || false,
+		).parse()
+
+		puts options['pretty'] ? JSON.pretty_generate(payload) : payload.to_json
+		exit 0
+	end
+
+	desc 'build', 'builds an nginx config from a json payload'
+	configure_options(self, 'method', $config.build_options)
+	def build(filename)
+		builder = CrossPlane::Builder.new()
+		dirname = Dir.pwd unless dirname
+		
+		# read the json payload from the specified file
+		payload = JSON.parse(File.read(File.join(dirname, filename)))
+		
+		if not options['force'] and not options['stdout']
+			existing = []
+			payload['config'].each do |config|
+				path = config['file']
+				p = Pathname.new(path)
+				path = p.absolute? ? path: File.join(dirname, path)
+				if File.exist?(path)
+					existing.push(path)
+				end
+			end
+
+
+			# ask the user if it's okay to overwrite existing files
+			if existing.length > 0
+				puts(format('building %s would overwrite these files:', filename))
+				puts existing.join("\n")
+				# if not _prompt_yes():
+				#   print('not overwritten')
+				#   return
+			end
+		end
+
+		# if stdout is set then just print each file after another like nginx -T
+		if options['stdout']
+			payload['config'].each do |config|
+				path = config['file']
+				p = Pathname.new(path)
+				path = p.absolute? ? path: File.join(dirname, path)
+				parsed = config['parsed']
+				output = builder.build(
+					parsed,
+					indent: options['indent'] || 4, # fix default option in config.rb
+					tabs: options['tabs'],
+					header: options['header']
+				)
+				output = output.rstrip + "\n"
+			end
+			return
+		end
+	end
+
+	desc 'lex', 'lexes tokens from an nginx config file'
+	def lex(filename)
+		puts 'lex'
+		exit
+	end
+
+	desc 'minify', 'removes all whitespace from an nginx config'
+	def minify(filename)
+		puts 'minifiy'
+		exit
+	end
+
+	desc 'format', 'formats an nginx config file'
+	def format(filename)
+		puts 'format'
+		exit
+	end
+end
