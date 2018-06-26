@@ -22,17 +22,18 @@ trap('SIGINT') {
 def configure_options(thor, opt_type, opts)
 	opts = opts.sort_by { |k| k[:name].to_s }
 	opts.each do |opt|
-		required = opt.has_key?(:required) ? opt[:required] : false
+		required = opt.key?(:required) ? opt[:required] : false
+		aliases = opt.key?(:aliases) ? opt[:aliases] : []
 		if opt_type == "class"
-			thor.class_option(opt[:name], :banner => opt[:banner], :desc => opt[:desc], :required => required, :type => opt[:type])
+			thor.class_option(opt[:name], :banner => opt[:banner], :desc => opt[:desc], :aliases => aliases, :required => required, :type => opt[:type])
 		elsif opt_type == "method"
-			thor.method_option(opt[:name], :banner => opt[:banner], :desc => opt[:desc], :required => required, :type => opt[:type])
+			thor.method_option(opt[:name], :banner => opt[:banner], :desc => opt[:desc], :aliases => aliases, :required => required, :type => opt[:type])
 		end
 	end
 end
 
 class CLI < Thor
-	desc 'parse', 'parses a json payload for an nginx config'
+	desc 'parse <filename>', 'parses an nginx config file and returns a json payload'
 	configure_options(self, 'method', $config.parse_options)
 	def parse(filename)
 		payload = CrossPlane::Parser.new(
@@ -45,7 +46,14 @@ class CLI < Thor
 			single: options['single'] || false,
 		).parse()
 
-		puts options['pretty'] ? JSON.pretty_generate(payload) : payload.to_json
+		
+		if options['out']
+			File.open(options['out'], 'w') do |f|
+				f.write(JSON.pretty_generate(payload))
+			end
+		else
+			puts options['pretty'] ? JSON.pretty_generate(payload) : payload.to_json
+		end
 		exit 0
 	end
 
@@ -100,9 +108,20 @@ class CLI < Thor
 	end
 
 	desc 'lex', 'lexes tokens from an nginx config file'
+	configure_options(self, 'method', $config.lex_options)
 	def lex(filename)
-		puts 'lex'
-		exit
+		payload = CrossPlane::Lexer.new(
+			filename: filename,
+		).lex()
+		lex = (not options['line_numbers'].nil? and options['line_numbers'] == true) ? payload : payload.map{|e| e[0]}
+
+		if options['out']
+			File.open(options['out'], 'w') do |f|
+				f.write(JSON.pretty_generate(lex))
+			end
+		else
+			puts options['pretty'] ? JSON.pretty_generate(lex) : lex.to_json
+		end
 	end
 
 	desc 'minify', 'removes all whitespace from an nginx config'

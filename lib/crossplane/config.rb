@@ -14,7 +14,7 @@ module CrossPlane
 			}
 
 			self.parse_opts = {
-				'out' => {:name => :out, :banner => '<string>', :desc => 'write output to a file', :type => :string, :required => false},
+				'out' => {:name => :out, :aliases => ['-o'], :banner => '<string>', :desc => 'write output to a file', :type => :string, :required => false},
 				'pretty' => {:name => :pretty, :desc => 'pretty print the json output', :type => :boolean, :required => false},
 				'ignore' => {:name => :ignore, :banner => '<str>', :desc => 'ignore directives (comma-separated)', :type => :string, :required => false},
 				'no-catch' => {:name => :no_catch, :desc => 'only collect first error in file', :type => :boolean, :required => false},
@@ -33,6 +33,12 @@ module CrossPlane
 				#'no-headers' => {:name => :no_header2, :desc => 'do not write header to configsd', :type => :boolean, :required => false},
 				'stdout' => {:name => :stdout, :desc => 'write configs to stdout instead', :type => :boolean, :required => false},
 			}
+
+			self.lex_opts = {
+				'out' => {:name => :out, :aliases => ['-o'], :banner => '<string>', :desc => 'write output to a file', :type => :string, :required => false},
+				'indent' => {:name => :indent, :aliases => ['-i'], :banner => '<int>', :desc => 'number of spaces to indent output', :type => :numeric, :required => false, :default => 4},
+				'numbers' => {:name => :line_numbers, :aliases => ['-n'], :desc => 'include line numbers in json payload', :type => :boolean, :required => false, :default => true},
+			}
 		end
 
 		def parse_options()
@@ -41,6 +47,10 @@ module CrossPlane
 
 		def build_options()
 			return self.common_opts.merge(self.build_opts).map { |_k, v| v }
+		end
+	
+		def lex_options()
+			return self.common_opts.merge(self.lex_opts).map { |_k, v| v }
 		end
 	end
 end
