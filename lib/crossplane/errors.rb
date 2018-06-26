@@ -7,17 +7,6 @@ module CrossPlane
 		end
 	end
 
-	class IncludeError < StandardError
-		attr_reader :filename, :lineno, :strerror
-		def initialize(filename, lineno, strerror)
-			@filename = filename
-			@lineno = lineno
-			@strerror = strerror
-			@error = format('%s in %s:%s', @strerror, @filename, @lineno)
-			super(@error)
-		end
-	end
-
 	class NgxParserBaseException < StandardError
 		attr_reader :filename, :lineno, :strerror
 		def initialize(filename, lineno, strerror)
@@ -62,6 +51,12 @@ module CrossPlane
 	end
 
 	class NgxParserDirectiveUnknownError < NgxParserBaseException
+		def initialize(filename, lineno, strerror)
+			super(filename, lineno, strerror)
+		end
+	end
+
+	class NgxParserIncludeError < NgxParserBaseException
 		def initialize(filename, lineno, strerror)
 			super(filename, lineno, strerror)
 		end

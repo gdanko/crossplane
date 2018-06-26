@@ -112,7 +112,7 @@ module CrossPlane
 
 						if consume == true
 							if token == '{'
-								_parse(parsing, tokens, consume=true)
+								_parse(parsing, tokens, consume: true)
 							end
 						end
 
@@ -176,7 +176,7 @@ module CrossPlane
 						if self.ignore.include?(stmt['directive'])
 							# if this directive was a block consume it too
 							if token == '{'
-								_parse(parsing, tokens, consume=true)
+								_parse(parsing, tokens, consume: true)
 							end
 							next
 						end
@@ -232,12 +232,12 @@ module CrossPlane
 									open(pattern).close
 									fnames = [pattern]
 								rescue Exception => e
-									f = CrossPlane::IncludeError.new(fname, stmt['line'], e.message)
+									f = CrossPlane::NgxParserIncludeError.new(fname, stmt['line'], e.message)
 									fnames = []
 									if self.catch_errors
 										_handle_error(parsing, f)
 									else
-										raise e
+										raise f
 									end
 								end
 							end

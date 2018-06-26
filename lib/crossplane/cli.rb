@@ -12,7 +12,6 @@ require_relative 'parser.rb'
 
 $script = File.basename($0)
 $config = CrossPlane::Config.new()
-#$logger = $utils.configure_logger()
 
 trap('SIGINT') {
 	puts("\nControl-C received.")
@@ -41,11 +40,10 @@ class CLI < Thor
 			combine: options['combine'] || false,
 			strict: options['strict'] || false,
 			catch_errors: options['no_catch'] ? false : true,
-			comments: options['comments'] || true,
-			ignore: options['ignore'] || [],
+			comments: options['include_comments'] || false,
+			ignore: options['ignore'].split(/\s*,\s*/) || [],
 			single: options['single'] || false,
 		).parse()
-
 		
 		if options['out']
 			File.open(options['out'], 'w') do |f|
