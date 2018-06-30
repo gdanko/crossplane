@@ -4,7 +4,7 @@ Reliable and fast NGINX configuration file parser and builder.
 This is a Ruby port of the Nginx Python crossplane package which can be found [here](https://github.com/nginxinc/crossplane).
 
 ### Install
-At this time crossplane is not yet available at [rubygems.org](rubygems.org). However, you can clone the repository and build with `gem build crossplane.gemspec`. You can then install with `gem install crossplane-x.y.z.gem`.
+`gem install crossplane`
 
 ## Command Line Interface
 The CLI is still pretty rough. Only a few of the options are currently working.
