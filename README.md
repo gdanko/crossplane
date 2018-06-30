@@ -1,4 +1,4 @@
-![Logo](crossplane-logo.png)
+![Logo](ex/crossplane-logo.png)
 
 # crossplane
 
