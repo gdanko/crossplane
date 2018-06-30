@@ -62,7 +62,7 @@ class CLI < Thor
 		dirname = Dir.pwd unless dirname
 		
 		# read the json payload from the specified file
-		payload = JSON.parse(File.read(File.join(dirname, filename)))
+		payload = JSON.parse(File.read(filename))
 		builder = CrossPlane::Builder.new(
 			payload: payload['config'][0]['parsed']
 		)	
@@ -90,7 +90,7 @@ class CLI < Thor
 		end
 
 		# if stdout is set then just print each file after another like nginx -T
-		if options['stdout']
+		#if options['stdout']
 			payload['config'].each do |config|
 				path = config['file']
 				p = Pathname.new(path)
@@ -105,7 +105,7 @@ class CLI < Thor
 				output = output.rstrip + "\n"
 			end
 			return
-		end
+		#end
 	end
 
 	desc 'lex <filename>', 'lexes tokens from an nginx config file'
