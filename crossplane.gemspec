@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Gary Danko']
   spec.email         = ['gary_danko@intuit.com']
   spec.summary       = 'Reliable and fast NGINX configuration file parser and builder'
-  spec.description   = 'Quick and reliable way to convert NGINX configurations into JSON and back.'
+  spec.description   = 'Quick and reliable way to convert NGINX configurations into JSON and back. Based on the NGINX crossplane project at https://github.com/nginxinc/crossplane'
   spec.homepage      = 'https://github.com/gdanko/crossplane'
   spec.license       = 'GPL-2.0'
 
