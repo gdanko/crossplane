@@ -11,7 +11,6 @@ require 'pp'
 module CrossPlane
 	class Parser
 		attr_accessor :analyzer
-		attr_accessor :ap
 		attr_accessor :catch_errors
 		attr_accessor :combine
 		attr_accessor :comments
@@ -32,7 +31,6 @@ module CrossPlane
 			requires = {}
 			valid = {
 				'params' => [
-					'ap',
 					'catch_errors',
 					'combine',
 					'comments',
@@ -44,7 +42,6 @@ module CrossPlane
 			}
 
 			content = CrossPlane.utils.validate_constructor(client: self, args: args, required: required, conflicts: conflicts, requires: requires, valid: valid)
-			self.ap = (content[:ap] && content[:ap] == true) ? true : false
 			self.catch_errors = (content[:catch_errors] && content[:catch_errors] == true) ? true : false
 			self.combine = (content[:combine] && content[:combine] == true) ? true : false
 			self.comments = (content[:comments] && content[:comments] == true) ? true : false
@@ -117,33 +114,18 @@ module CrossPlane
 						directive = token
 
 						if self.combine
-							if self.ap
-								stmt = {
-									'file' => fname,
-									'directive' => directive,
-									'args' => [],
-								}
-							else
-								stmt = {
-									'file' => fname,
-									'directive' => directive,
-									'line' => lineno,
-									'args' => [],
-								}
-							end
+							stmt = {
+								'file' => fname,
+								'directive' => directive,
+								'line' => lineno,
+								'args' => [],
+							}
 						else
-							if self.ap
-								stmt = {
-									'directive' => directive,
-									'args' => [],
-								}
-							else
-								stmt = {
-									'directive' => directive,
-									'line' => lineno,
-									'args' => [],
-								}
-							end
+							stmt = {
+								'directive' => directive,
+								'line' => lineno,
+								'args' => [],
+							}
 						end
 
 						# if token is comment
@@ -164,10 +146,6 @@ module CrossPlane
 						while not ['{', '}', ';'].include?(token)
 							stmt['args'].push(token)
 							token, _ = tokens.next
-						end
-
-						if self.ap
-							stmt['args'] = [stmt['args'].join(' ')]
 						end
 
 						# consume the directive if it is ignored and move on

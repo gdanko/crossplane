@@ -12,7 +12,6 @@ module CrossPlane
 		NEWLINE = "\n"
 		TAB = "\t"
 
-		attr_accessor :ap
 		attr_accessor :header
 		attr_accessor :indent
 		attr_accessor :padding
@@ -28,7 +27,6 @@ module CrossPlane
 			requires = {}
 			valid = {
 				'params' => [
-					'ap',
 					'header',
 					'indent',
 					'payload',
@@ -37,7 +35,6 @@ module CrossPlane
 			}
 
 			content = CrossPlane.utils.validate_constructor(client: self, args: args, required: required, conflicts: conflicts, requires: requires, valid: valid)
-			self.ap = (content[:ap] && content[:ap] == true) ? true : false
 			self.header = (content[:header] && content[:header] == true) ? true : false
 			self.indent = content[:indent] ? content[:indent] : 4
 			self.payload = content[:payload] ? content[:payload] : nil
@@ -55,7 +52,7 @@ module CrossPlane
 				lines = [
 					"# This config was built from JSON using NGINX crossplane.\n",
 					"# If you encounter any bugs please report them here:\n",
-					"# https://github.com/nginxinc/crossplane/issues\n",
+					"# https://github.com/gdanko/crossplane/issues\n",
 					"\n"
 				]
 			else

@@ -1,5 +1,3 @@
-![Logo](ext/crossplane-logo.png)
-
 # crossplane
 
 Reliable and fast NGINX configuration file parser and builder.
