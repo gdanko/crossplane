@@ -1,14 +1,15 @@
-#require 'crossplane/config'
-#require 'crossplane/parser'
+require 'crossplane/builder'
+require 'crossplane/config'
+require 'crossplane/parser'
 require 'json'
 require 'logger'
 require 'pp'
 require 'thor'
 require 'yaml'
 
-require_relative 'builder.rb'
-require_relative 'config.rb'
-require_relative 'parser.rb'
+#require_relative 'builder.rb'
+#require_relative 'config.rb'
+#require_relative 'parser.rb'
 
 $script = File.basename($0)
 $config = CrossPlane::Config.new()
@@ -41,7 +42,7 @@ class CLI < Thor
 			strict: options['strict'] || false,
 			catch_errors: options['no_catch'] ? false : true,
 			comments: options['include_comments'] || false,
-			ignore: options['ignore'].split(/\s*,\s*/) || [],
+			ignore: options['ignore'] ? options['ignore'].split(/\s*,\s*/) : [],
 			single: options['single'] || false,
 		).parse()
 		
@@ -55,14 +56,16 @@ class CLI < Thor
 		exit 0
 	end
 
-	desc 'build', 'builds an nginx config from a json payload'
+	desc 'build <filename>', 'builds an nginx config from a json payload'
 	configure_options(self, 'method', $config.build_options)
 	def build(filename)
-		builder = CrossPlane::Builder.new()
 		dirname = Dir.pwd unless dirname
 		
 		# read the json payload from the specified file
 		payload = JSON.parse(File.read(File.join(dirname, filename)))
+		builder = CrossPlane::Builder.new(
+			payload: payload['config'][0]['parsed']
+		)	
 		
 		if not options['force'] and not options['stdout']
 			existing = []
@@ -105,7 +108,7 @@ class CLI < Thor
 		end
 	end
 
-	desc 'lex', 'lexes tokens from an nginx config file'
+	desc 'lex <filename>', 'lexes tokens from an nginx config file'
 	configure_options(self, 'method', $config.lex_options)
 	def lex(filename)
 		payload = CrossPlane::Lexer.new(
@@ -128,9 +131,9 @@ class CLI < Thor
 		exit
 	end
 
-	desc 'format', 'formats an nginx config file'
-	def format(filename)
-		puts 'format'
-		exit
-	end
+	#desc 'format', 'formats an nginx config file'
+	#def format(filename)
+	#	puts 'format'
+	#	exit
+	#end
 end

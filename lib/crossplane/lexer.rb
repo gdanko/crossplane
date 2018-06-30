@@ -1,9 +1,8 @@
-#require 'crossplan/errors'
-#require 'crossplan/globals'
-require 'pp'
+require 'crossplane/errors'
+require 'crossplane/globals'
 
-require_relative 'errors.rb'
-require_relative 'globals.rb'
+#require_relative 'errors.rb'
+#require_relative 'globals.rb'
 
 module CrossPlane
 	class Lexer
@@ -84,7 +83,7 @@ module CrossPlane
 					# handle parameter expansion syntax (ex: "${var[@]}")
 					if token and token[-1] == '$' and char == '{'
 						next_token_is_directive = false
-						while token[-1]!= '}' and not CrossPlane.utils.isspace(char)
+						while token[-1] != '}' and not CrossPlane.utils.isspace(char)
 							token += char
 							char, line = enum.next
 						end

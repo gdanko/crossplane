@@ -1,14 +1,12 @@
-#require 'crossplan/analyzer'
-#require 'crossplan/globals'
-#require 'crossplan/lexer'
-#require 'crossplan/utils'
+require 'crossplane/analyzer'
+require 'crossplane/globals'
+require 'crossplane/lexer'
 require 'pathname'
 require 'pp'
 
-require_relative 'analyzer.rb'
-require_relative 'globals.rb'
-require_relative 'lexer.rb'
-require_relative 'utils.rb'
+#require_relative 'analyzer.rb'
+#require_relative 'globals.rb'
+#require_relative 'lexer.rb'
 
 module CrossPlane
 	class Parser

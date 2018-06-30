@@ -2,6 +2,6 @@
 
 $: << File.expand_path("../lib", __FILE__)
 require "thor"
-#require "idps_cli/cli"
-require_relative "../lib/crossplane/cli.rb"
+require "idps_cli/cli"
+#require_relative "../lib/crossplane/cli.rb"
 CLI.start

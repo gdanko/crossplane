@@ -15,14 +15,14 @@ module CrossPlane
 
 			self.parse_opts = {
 				'out' => {:name => :out, :aliases => ['-o'], :banner => '<string>', :desc => 'write output to a file', :type => :string, :required => false},
-				'pretty' => {:name => :pretty, :desc => 'pretty print the json output', :type => :boolean, :required => false},
-				'ignore' => {:name => :ignore, :banner => '<str>', :desc => 'ignore directives (comma-separated)', :type => :string, :required => false},
-				'no-catch' => {:name => :no_catch, :desc => 'only collect first error in file', :type => :boolean, :required => false},
-				'tb-onerror' => {:name => :tb_onerror, :desc => 'include tracebacks in config errors', :type => :boolean, :required => false},
-				'combine' => {:name => :combine, :desc => 'use includes to create one single file', :type => :boolean, :required => false},
-				'single' => {:name => :single, :desc => 'do not include other config files', :type => :boolean, :required => false},
-				'include-comments' => {:name => :include_comments, :desc => 'include comments in json', :type => :boolean, :required => false},
-				'strict' => {:name => :strict, :desc => 'raise errors for unknown directives', :type => :boolean, :required => false},
+				'pretty' => {:name => :pretty, :desc => 'pretty print the json output', :type => :boolean, :required => false, :default => :false},
+				'ignore' => {:name => :ignore, :banner => '<str>', :desc => 'ignore directives (comma-separated)', :type => :string, :required => false, :default => []},
+				'no-catch' => {:name => :no_catch, :desc => 'only collect first error in file', :type => :boolean, :required => false, :default => :false},
+				#'tb-onerror' => {:name => :tb_onerror, :desc => 'include tracebacks in config errors', :type => :boolean, :required => false},
+				#'combine' => {:name => :combine, :desc => 'use includes to create one single file', :type => :boolean, :required => false},
+				#'single' => {:name => :single, :desc => 'do not include other config files', :type => :boolean, :required => false},
+				'include-comments' => {:name => :include_comments, :desc => 'include comments in json', :type => :boolean, :required => false, :default => :false},
+				'strict' => {:name => :strict, :desc => 'raise errors for unknown directives', :type => :boolean, :required => false, :default => :false},
 			}
 
 			self.build_opts = {

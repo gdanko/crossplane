@@ -1,9 +1,9 @@
-#require 'crossplane/globals'
+require 'crossplane/globals'
 require 'json'
 require 'pathname'
 require 'pp'
 
-require_relative 'globals.rb'
+#require_relative 'globals.rb'
 
 module CrossPlane
 	class Builder

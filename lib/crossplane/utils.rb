@@ -1,7 +1,7 @@
-#require 'crossplane/errors'
+require 'crossplane/errors'
 require 'logger'
 
-require_relative 'errors.rb'
+#require_relative 'errors.rb'
 
 module CrossPlane
 	class Utils

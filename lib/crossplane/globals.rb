@@ -1,8 +1,8 @@
-#require 'crossplane/config'
-#require 'crossplane/utils'
+require 'crossplane/config'
+require 'crossplane/utils'
 
-require_relative 'config.rb'
-require_relative 'utils.rb'
+#require_relative 'config.rb'
+#require_relative 'utils.rb'
 
 module CrossPlane
 	def self.utils=(utils)

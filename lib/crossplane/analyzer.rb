@@ -1,6 +1,6 @@
-#require 'crossplan/errors'
+require 'crossplane/errors'
 
-require_relative 'errors.rb'
+#require_relative 'errors.rb'
 
 module CrossPlane
 	class Analyzer
