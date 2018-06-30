@@ -1,6 +1,5 @@
 source "https://rubygems.org"
 
-git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
+gem 'thor', '>=0.19.1'
 
-# Specify your gem's dependencies in crossplane.gemspec
-gemspec
+ruby '2.2.3'
