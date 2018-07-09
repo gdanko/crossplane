@@ -103,8 +103,9 @@ class CLI < Thor
 					header: options['header']
 				)
 				output = output.rstrip + "\n"
+				puts output
 			end
-			return
+			#puts output
 		#end
 	end
 
