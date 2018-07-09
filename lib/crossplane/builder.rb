@@ -60,9 +60,7 @@ module CrossPlane
 			end
 
 			lines += _build_lines(payload)
-			puts lines.join('')
-			exit
-			return lines.join('')
+			lines.join('')
 		end
 
 		private
@@ -106,7 +104,7 @@ module CrossPlane
 
 					if directive == 'if'
 						line = format('if (%s)', args.join(' '))
-					elsif args
+					elsif args and args.length > 0
 						line = format('%s %s', directive, args.join(' '))
 					else
 						line = directive
@@ -117,7 +115,7 @@ module CrossPlane
 					else
 						y.yield(_put_line(line + ' {', obj))
 
-						# set prev_obj to propper indentation in block
+						# set prev_obj to proper indentation in block
 						self.state['prev_obj'] = obj
 						_build_lines(obj['block']).each do |line|
 							y.yield(line)
@@ -129,6 +127,14 @@ module CrossPlane
 				self.state['depth'] = self.state['depth'] - 1
 			end
 			lines.to_a
+		end
+
+		def _enquote(arg)
+			if _needs_quotes(arg)
+				arg = arg.inspect
+				arg = arg.gsub('\\\\', '\\')
+			end
+			arg
 		end
 
 		def _escape(string)
@@ -168,36 +174,29 @@ module CrossPlane
 			# lexer should throw an error when variable expansion syntax
 			# is messed up, but just wrap it in quotes for now I guess
 			chars = _escape(string)
+			char = chars.next
+
+			if CrossPlane.utils.isspace(char) or ['{', ';', '"', "'", '${'].include?(char)
+				return true
+			end
+
+			expanding = false
 
 			begin
 				while char = chars.next
-
-
-					# arguments can't start with variable expansion syntax
-					if CrossPlane.utils.isspace(char) or ['{', ';', '"', "'", '${'].include?(char)
+					if CrossPlane.utils.isspace(char) or ['{', ';', '"', "'"].include?(char)
 						return true
-					end
 
-					expanding = false
-					#chars.each do |char|
-					#	if CrossPlane.utils.isspace(char) or ['{', ';', '"', "'"].include(char)
-					#		return true
-					#	elsif char == 
-					# char in ('\\', '$') or expanding
-					return expanding
+					elsif char == (expanding ? '${' : '}')
+						return true
+
+					elsif char == (expanding ? '}' : '${')
+						expanding = !expanding
+					end
 				end
+				return ['\\', '$'].include?(char) ? ['\\', '$'].include?(char) : expanding
 			rescue StopIteration
 			end
 		end
-
-		def _enquote(arg)
-			if _needs_quotes(arg)
-				#arg = repr(codecs.decode(arg, 'raw_unicode_escape'))
-				arg = arg.gsub('\\\\', '\\')
-			end
-			return arg
-		end
-
-
 	end
 end
