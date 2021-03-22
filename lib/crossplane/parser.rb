@@ -55,8 +55,6 @@ module CrossPlane
 		end
 
 		def parse(*args, onerror:nil)
-			config_dir = File.dirname(self.filename)
-
 			self.payload = {
 				'status' => 'ok',
 				'errors' => [],
@@ -96,9 +94,10 @@ module CrossPlane
 			end
 
 			def _parse(parsing, tokens, ctx:[], consume: false)
+				config_dir = File.dirname(self.filename)
 				fname = parsing['file']
 				parsed = []
-			
+
 				begin
 					while tuple = tokens.next
 						token, lineno = tuple
